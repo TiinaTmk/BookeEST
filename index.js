@@ -48,8 +48,9 @@ app.post('/rooms', (req, res) => {
         decription: req.body.decription
     })
     rooms.push(room)
+    
     res.status(201)
-    .location(`{getBaseURL()}/rooms/${room.length}`)
+    .location(`${getBaseURL(req)}/rooms/${room.length}`)
     .send(room)
     });
 

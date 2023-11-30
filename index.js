@@ -1,4 +1,5 @@
-const app = require('express')()
+const express = require('express');
+const app = express();
 const port = 8080
 const swaggerUI = require('swagger-ui-express');
 
@@ -18,10 +19,9 @@ const rooms =[
     {id:6, name:"Double with city view and bath", price: 250.01, decription:"Super cool double room with city view, non-smoking"  }
 ]
 
-app.get('/rooms', (req, res) => {res.send(["Single","Suite", "Double"])
-});
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use(express.json());
 
+app.get('/rooms', (req, res) => {res.send(rooms)});
 //võtab id massiivi asukoha järgi
 // app.get('/rooms/:id', (req, res) => {
 //     if(typeof rooms[req.params.id-1] === 'undefined'){
@@ -35,6 +35,28 @@ app.get('/rooms/:id', (req, res) => {const room = rooms.find(room => room.id == 
 res.send(room);
 });
 
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
+app.post('/rooms', (req, res) => {
+    if(req.params.name || req.params.price || req.params.decription){
+        return res.status(400).send({error: "One or all parameters that are required are missing"})
+    }
+    let room = ({
+        id: rooms.length + 1,
+        name: req.body.name,
+        price: req.body.price,
+        decription: req.body.decription
+    })
+    rooms.push(room)
+    res.status(201)
+    .location(`{getBaseURL()}/rooms/${room.length}`)
+    .send(room)
+    });
+
 app.listen(port, () => {
-    console.log(`Api up at: http://localhost:${port}`)
-});
+    console.log(`Api up at: http://localhost:${port}`)});
+
+function getBaseURL(req) {
+    return req.connection && req.connection.encrypted? 
+    'https://' : 'http'+ ` ://${req.headers.host}`;
+}

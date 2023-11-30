@@ -1,0 +1,84 @@
+openapi: 3.0.2
+info:
+    title: TARge22Games-Api
+    version: 1.0.0
+    description: 'games example project for targe 22, #gamer4lyfe'
+paths:
+    /games:
+        get:
+            tags:
+                - games
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                            examples:
+                                List of games:
+                                    value:
+                                        - Team Fortress 2
+                                        - Super Mario Bros
+                                        - Sonic the Hedgehog
+                    description: Returns a list of games
+            summary: get a list of all games from api.
+            description: Returns a list of all games in the API
+    '/games/{id}':
+        get:
+            tags:
+                - details
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                            examples:
+                                Details of a game:
+                                    value:
+                                        id: 2
+                                        name: Team Fortress 2
+                                        price: 0
+                                        description: The original proprietor of the microtransaction concept
+                    description: 'Returns full details of a given game, as determined by the id.'
+                '404':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                Game /w+ was not found:
+                                    value:
+                                        error: Game\w+ was not found within the games array
+                    description: |
+                        Game was not found in the games array with the given id.
+            operationId: id
+            summary: Get full details of a game
+            description: 'Returns full details about a specific game, as determined by id input by the user'
+        parameters:
+            -
+                examples:
+                    Id of game:
+                        value: '66'
+                name: id
+                description: Id of the game that we require
+                schema:
+                    type: integer
+                in: path
+                required: true
+components:
+    schemas:
+        error:
+            title: Root Type for error
+            description: ''
+            type: object
+            properties:
+                error:
+                    type: string
+            example:
+                error: Error message.
+ 

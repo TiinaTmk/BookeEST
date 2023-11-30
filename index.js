@@ -2,8 +2,10 @@ const app = require('express')()
 const port = 8080
 const swaggerUI = require('swagger-ui-express');
 
-const yamljs = require('js-yaml');
+const yamljs = require('yamljs');
 const swaggerDocument = yamljs.load('./docs/swagger.yaml');
+
+//const swaggerDocument = require('./docs/swagger.json');
 
 
 const rooms =[

@@ -1,52 +1,115 @@
 {
-    "get": {
-        "tags": [
-            "details"
-        ],
-        "responses": {
-            "200": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "examples": {
-                            "Details of a room": {
-                                "value": {
-                                    "id": 3,
-                                    "name": "Double smoking",
-                                    "price": 120,
-                                    "decription": "Super cool room with no view at all, smoking allowed"
+    "openapi": "3.0.2",
+    "info": {
+        "title": "BookEST",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/rooms": {
+            "get": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "examples": {
+                                "list of rooms": {
+                                    "value": "\"Suites\",\n\"Familyroom\"\n\"Double\""
                                 }
                             }
                         }
                     }
                 },
-                "description": "Returns full details of a given room, as determined by the id"
-            },
-            "404": {
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "$ref": "#/components/schemas/error"
-                        },
-                        "examples": {
-                            "Room /w+ was not found": {
-                                "value": {
-                                    "error": "room\\w+ was not found within the rooms array"
+                "tags": [
+                    "rooms"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "examples": {
+                                    "list of rooms": {
+                                        "value": [
+                                            "Suites",
+                                            "Double",
+                                            "Twin"
+                                        ]
+                                    }
                                 }
                             }
-                        }
+                        },
+                        "description": "return of list of rooms"
                     }
                 },
-                "description": "Room not found with given id"
+                "summary": "get a list of rooms from api",
+                "description": "returns a list of all rooms in the API"
             }
         },
-        "operationId": "id",
-        "summary": "Get full details of a room",
-        "description": "Returns full detauils about a specific room as determined by id input put the user"
+        "/rooms/{id}": {
+            "get": {
+                "tags": [
+                    "details"
+                ],
+                "parameters": [
+                    {
+                        "examples": {
+                            "Id of a room": {
+                                "value": "48"
+                            }
+                        },
+                        "name": "id",
+                        "description": "Id of the room",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Returns full details of a given room, as determined by the id"
+                    }
+                },
+                "operationId": "id",
+                "summary": "Get full details of a room",
+                "description": "Returns full detauils about a specific room as determined by id input put the user"
+            },
+            "parameters": [
+                {
+                    "examples": {
+                        "integer of requested id": {
+                            "value": "63"
+                        }
+                    },
+                    "name": "id",
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "in": "path",
+                    "required": true
+                }
+            ]
+        }
     }
 }

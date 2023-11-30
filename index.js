@@ -2,6 +2,7 @@ const app = require('express')()
 const port = 8080
 const swaggerUI = require('swagger-ui-express');
 
+//muuda yaml fail vastavusse apicurioga
 const yamljs = require('yamljs');
 const swaggerDocument = yamljs.load('./docs/swagger.yaml');
 

@@ -9,7 +9,6 @@ const swaggerDocument = yamljs.load('./docs/swagger.yaml');
 
 //const swaggerDocument = require('./docs/swagger.json');
 
-
 const rooms =[
     {id:1, name:"Single with mega city view", price: 120.00, decription:"Super cool room with city view, non-smoking" },
     {id:2, name:"Suite with bath", price: 900.00, decription:"Super cool room with city view and huuge bath, non-smoking"  },

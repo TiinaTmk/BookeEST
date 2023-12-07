@@ -35,10 +35,10 @@ app.get('/rooms/:id', (req, res) => {const room = rooms.find(room => room.id == 
 res.send(room);
 });
 
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
 
 app.post('/rooms', (req, res) => {
-    if(req.params.name || req.params.price || req.params.decription){
+    if(!req.params.name || !req.params.price || req.params.decription){
         return res.status(400).send({error: "One or all parameters that are required are missing"})
     }
     let room = ({
@@ -54,10 +54,12 @@ app.post('/rooms', (req, res) => {
     .send(room)
     });
 
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
 app.listen(port, () => {
     console.log(`Api up at: http://localhost:${port}`)});
 
 function getBaseURL(req) {
     return req.connection && req.connection.encrypted? 
-    'https://' : 'http'+ ` ://${req.headers.host}`;
+    'https:' : 'http'+ ` ://${req.headers.host}`;
 }

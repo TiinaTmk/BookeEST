@@ -22,13 +22,6 @@ const rooms =[
 app.use(express.json());
 
 app.get('/rooms', (req, res) => {res.send(rooms)});
-//võtab id massiivi asukoha järgi
-// app.get('/rooms/:id', (req, res) => {
-//     if(typeof rooms[req.params.id-1] === 'undefined'){
-//         return res.status(404).send({error: "Room not found"})
-//     }
-//     res.send(rooms[req.params.id-1])
-// });
 
 app.get('/rooms/:id', (req, res) => {
     if (typeof rooms[req.params.id-1] === 'undefined'){

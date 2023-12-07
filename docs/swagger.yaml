@@ -5,20 +5,6 @@ info:
 paths:
     /rooms:
         get:
-            requestBody:
-                description: A new room has been added
-                content:
-                    application/json:
-                        schema:
-                            type: array
-                            items:
-                                type: string
-                        examples:
-                            list of rooms:
-                                value: |-
-                                    "Suites",
-                                    "Familyroom"
-                                    "Double"
             tags:
                 - rooms
             responses:
@@ -36,10 +22,6 @@ paths:
                                         - Double
                                         - Twin
                     description: return of list of rooms
-                '400':
-                    content:
-                        application/json: {}
-                    description: One or multiple or all parameters are missing
             summary: get a list of rooms from api
             description: returns a list of all rooms in the API
         post:
@@ -56,6 +38,8 @@ paths:
                                     price: 8.51
                                     description: some text
                 required: true
+            tags:
+                - new-room
             responses:
                 '201':
                     content:
@@ -97,16 +81,62 @@ paths:
                                 type: array
                                 items:
                                     type: string
+                            examples:
+                                Details of a room:
+                                    value: |-
+                                        [
+                                           "id": 1,
+                                               "name": "double",
+                                                "price": 111.50,
+                                                "decription": "with view"
+                                        ]
                     description: 'Returns full details of a given room, as determined by the id'
+                '404':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                room not found:
+                                    value:
+                                        error: room not found wit given id
+                    description: Room not found with given Id
             operationId: id
             summary: Get full details of a room
             description: Returns full detauils about a specific room as determined by id input put the user
+        delete:
+            tags:
+                - delete-room
+            responses:
+                '204':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/delete-room'
+                            examples:
+                                delete:
+                                    value:
+                                        id: 5
+                    description: 'Deleted successfully, nothing to display'
+                '404':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                error:
+                                    value:
+                                        error: 'Can''t delete, id not found'
+                    description: room not found
+            summary: Delete rooms with given Id
+            description: Delete rooms with given Id
         parameters:
             -
                 examples:
                     integer of requested id:
                         value: '63'
                 name: id
+                description: Id of the room that we require
                 schema:
                     type: integer
                 in: path
@@ -142,3 +172,14 @@ components:
                     type: string
             example:
                 error: Error message
+        delete-room:
+            description: Delete room with given id
+            required:
+                - id
+            type: object
+            properties:
+                id:
+                    description: id of the room
+                    type: integer
+            example:
+                id: 34

@@ -30,12 +30,12 @@ app.get('/rooms', (req, res) => {res.send(rooms)});
 //     res.send(rooms[req.params.id-1])
 // });
 
-//võtab id tegeliku väärtuse järgi (KASUTA SEDA, lisa error)
-app.get('/rooms/:id', (req, res) => {const room = rooms.find(room => room.id == req.params.id);
-res.send(room);
-});
-
-
+app.get('/rooms/:id', (req, res) => {
+    if (typeof rooms[req.params.id-1] === 'undefined'){
+    return res.status(404).send({error: "Room not found"})
+    }
+res.send(rooms[req.params.id-1]);
+})
 
 app.post('/rooms', (req, res) => {
     if(!req.params.name || !req.params.price || req.params.decription){
@@ -53,6 +53,14 @@ app.post('/rooms', (req, res) => {
     .location(`${getBaseURL(req)}/rooms/${room.length}`)
     .send(room)
     });
+
+app.delete('/rooms/:id', (req, res) => {
+    if (typeof rooms[req.params.id-1] === 'undefined'){
+        return res.status(404).send({error: "Room not found"})
+    }
+    rooms.splice(req.params.id-1, 1)
+    res.status(204).send({error: "No Content"})
+})
 
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 

@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
 const port = 8080
 const swaggerUI = require('swagger-ui-express');
@@ -9,14 +8,14 @@ const yamljs = require('yamljs');
 const swaggerDocument = yamljs.load('./docs/swagger.yaml');
 
 //const swaggerDocument = require('./docs/swagger.json');
-app.use(cors());
+
 const rooms =[
-    {id:1, name:"Single with mega city view", price: 120.00, description:"Super cool room with city view, non-smoking" },
-    {id:2, name:"Suite with bath", price: 900.00, description:"Super cool room with city view and huuge bath, non-smoking"  },
-    {id:3, name:"Double smoking", price: 120.00, description:"Super cool room with no view at all, smoking allowed"  },
-    {id:4, name:"Double with city view", price: 150.00, description:"Super cool room with city view, non-smoking"  },
-    {id:5, name:"Suite with bath and city view", price: 1499.99, description:"Super cool room with city view, non-smoking, bath and shower" },
-    {id:6, name:"Double with city view and bath", price: 250.01, description:"Super cool double room with city view, non-smoking"  }
+    {id:1, name:"Single with mega city view", price: 120.00, decription:"Super cool room with city view, non-smoking" },
+    {id:2, name:"Suite with bath", price: 900.00, decription:"Super cool room with city view and huuge bath, non-smoking"  },
+    {id:3, name:"Double smoking", price: 120.00, decription:"Super cool room with no view at all, smoking allowed"  },
+    {id:4, name:"Double with city view", price: 150.00, decription:"Super cool room with city view, non-smoking"  },
+    {id:5, name:"Suite with bath and city view", price: 1499.99, decription:"Super cool room with city view, non-smoking, bath and shower" },
+    {id:6, name:"Double with city view and bath", price: 250.01, decription:"Super cool double room with city view, non-smoking"  }
 ]
 
 app.use(express.json());
@@ -31,14 +30,14 @@ res.send(rooms[req.params.id-1]);
 })
 
 app.post('/rooms', (req, res) => {
-    if(!req.params.name || !req.params.price || req.params.description){
+    if(!req.params.name || !req.params.price || req.params.decription){
         return res.status(400).send({error: "One or all parameters that are required are missing"})
     }
     let room = ({
         id: rooms.length + 1,
         name: req.body.name,
         price: req.body.price,
-        description: req.body.description
+        decription: req.body.decription
     })
     rooms.push(room)
     

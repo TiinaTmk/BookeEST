@@ -1,13 +1,12 @@
 openapi: 3.0.2
 info:
-    title: TARge22Games-Api
+    title: BookEST
     version: 1.0.0
-    description: 'games example project for targe 22, #gamer4lyfe'
 paths:
-    /games:
+    /rooms:
         get:
             tags:
-                - games
+                - rooms
             responses:
                 '200':
                     content:
@@ -17,18 +16,63 @@ paths:
                                 items:
                                     type: string
                             examples:
-                                List of games:
+                                list of rooms:
                                     value:
-                                        - Team Fortress 2
-                                        - Super Mario Bros
-                                        - Sonic the Hedgehog
-                    description: Returns a list of games
-            summary: get a list of all games from api.
-            description: Returns a list of all games in the API
-    '/games/{id}':
+                                        - Suites
+                                        - Double
+                                        - Twin
+                    description: return of list of rooms
+            summary: get a list of rooms from api
+            description: returns a list of all rooms in the API
+        post:
+            requestBody:
+                description: a new room to be created
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/new-room'
+                        examples:
+                            example of a room:
+                                value:
+                                    name: some text
+                                    price: 8.51
+                                    description: some text
+                required: true
+            tags:
+                - new-room
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/new-room'
+                    description: Rooms has been created into the array/database
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                One or all details are missing:
+                                    value:
+                                        error: One or all details are missing
+                    description: NOt found
+            description: one or more not found
+    '/rooms/{id}':
         get:
             tags:
                 - details
+            parameters:
+                -
+                    examples:
+                        Id of a room:
+                            value: '48'
+                    name: id
+                    description: Id of the room
+                    schema:
+                        type: integer
+                    in: path
+                    required: true
             responses:
                 '200':
                     content:
@@ -38,40 +82,87 @@ paths:
                                 items:
                                     type: string
                             examples:
-                                Details of a game:
-                                    value:
-                                        id: 2
-                                        name: Team Fortress 2
-                                        price: 0
-                                        description: The original proprietor of the microtransaction concept
-                    description: 'Returns full details of a given game, as determined by the id.'
+                                Details of a room:
+                                    value: |-
+                                        [
+                                           "id": 1,
+                                               "name": "double",
+                                                "price": 111.50,
+                                                "decription": "with view"
+                                        ]
+                    description: 'Returns full details of a given room, as determined by the id'
                 '404':
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/error'
                             examples:
-                                Game /w+ was not found:
+                                room not found:
                                     value:
-                                        error: Game\w+ was not found within the games array
-                    description: |
-                        Game was not found in the games array with the given id.
+                                        error: room not found wit given id
+                    description: Room not found with given Id
             operationId: id
-            summary: Get full details of a game
-            description: 'Returns full details about a specific game, as determined by id input by the user'
+            summary: Get full details of a room
+            description: Returns full detauils about a specific room as determined by id input put the user
+        delete:
+            tags:
+                - delete-room
+            responses:
+                '204':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/delete-room'
+                            examples:
+                                delete:
+                                    value:
+                                        id: 5
+                    description: 'Deleted successfully, nothing to display'
+                '404':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                error:
+                                    value:
+                                        error: 'Can''t delete, id not found'
+                    description: room not found
+            summary: Delete rooms with given Id
+            description: Delete rooms with given Id
         parameters:
             -
                 examples:
-                    Id of game:
-                        value: '66'
+                    integer of requested id:
+                        value: '63'
                 name: id
-                description: Id of the game that we require
+                description: Id of the room that we require
                 schema:
                     type: integer
                 in: path
                 required: true
 components:
     schemas:
+        new-room:
+            title: Root Type for new-room
+            description: ''
+            required:
+                - price
+                - name
+                - description
+            type: object
+            properties:
+                name:
+                    type: string
+                price:
+                    format: float
+                    type: number
+                description:
+                    type: string
+            example:
+                name: Presidental suite
+                price: 99999
+                description: Extra king sized bed with bath view
         error:
             title: Root Type for error
             description: ''
@@ -80,5 +171,15 @@ components:
                 error:
                     type: string
             example:
-                error: Error message.
- 
+                error: Error message
+        delete-room:
+            description: Delete room with given id
+            required:
+                - id
+            type: object
+            properties:
+                id:
+                    description: id of the room
+                    type: integer
+            example:
+                id: 34

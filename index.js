@@ -9,7 +9,6 @@ const swaggerDocument = yamljs.load('./docs/swagger.yaml');
 
 //const swaggerDocument = require('./docs/swagger.json');
 
-
 const rooms =[
     {id:1, name:"Single with mega city view", price: 120.00, decription:"Super cool room with city view, non-smoking" },
     {id:2, name:"Suite with bath", price: 900.00, decription:"Super cool room with city view and huuge bath, non-smoking"  },
@@ -22,23 +21,16 @@ const rooms =[
 app.use(express.json());
 
 app.get('/rooms', (req, res) => {res.send(rooms)});
-//võtab id massiivi asukoha järgi
-// app.get('/rooms/:id', (req, res) => {
-//     if(typeof rooms[req.params.id-1] === 'undefined'){
-//         return res.status(404).send({error: "Room not found"})
-//     }
-//     res.send(rooms[req.params.id-1])
-// });
 
-//võtab id tegeliku väärtuse järgi (KASUTA SEDA, lisa error)
-app.get('/rooms/:id', (req, res) => {const room = rooms.find(room => room.id == req.params.id);
-res.send(room);
-});
-
-app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.get('/rooms/:id', (req, res) => {
+    if (typeof rooms[req.params.id-1] === 'undefined'){
+    return res.status(404).send({error: "Room not found"})
+    }
+res.send(rooms[req.params.id-1]);
+})
 
 app.post('/rooms', (req, res) => {
-    if(req.params.name || req.params.price || req.params.decription){
+    if(!req.params.name || !req.params.price || req.params.decription){
         return res.status(400).send({error: "One or all parameters that are required are missing"})
     }
     let room = ({
@@ -48,15 +40,26 @@ app.post('/rooms', (req, res) => {
         decription: req.body.decription
     })
     rooms.push(room)
+    
     res.status(201)
-    .location(`{getBaseURL()}/rooms/${room.length}`)
+    .location(`${getBaseURL(req)}/rooms/${room.length}`)
     .send(room)
     });
+
+app.delete('/rooms/:id', (req, res) => {
+    if (typeof rooms[req.params.id-1] === 'undefined'){
+        return res.status(404).send({error: "Room not found"})
+    }
+    rooms.splice(req.params.id-1, 1)
+    res.status(204).send({error: "No Content"})
+})
+
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.listen(port, () => {
     console.log(`Api up at: http://localhost:${port}`)});
 
 function getBaseURL(req) {
     return req.connection && req.connection.encrypted? 
-    'https://' : 'http'+ ` ://${req.headers.host}`;
+    'https:' : 'http'+ ` ://${req.headers.host}`;
 }

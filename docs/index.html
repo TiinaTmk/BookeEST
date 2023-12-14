@@ -36,6 +36,7 @@
               <tr><th>ID</th></tr>{{roomInModal.id}}</td></tr>
               <tr><th>Name</th></tr>{{roomInModal.name}}</td></tr>
               <tr><th>Price</th></tr>{{roomInModal.price}}</td></tr>
+              <tr><th>Description</th></tr>{{roomInModal.description}}</td></tr>
             </table>
             </div>
         </div>
@@ -64,7 +65,7 @@
       },
       methods: {
         getRoom: async function (id) {
-          this.roomInModal = await(await fetch(`http://localhost:8080/rooms`)).json();
+          this.roomInModal = await(await fetch(`http://localhost:8080/rooms/${id}`)).json();
           let roomInModal = new bootstrap.Modal(document.getElementById('roomInfoModal'), {})
           roomInModal.show();
     }

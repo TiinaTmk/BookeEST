@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-///
+
 
 <head>
   <meta charset="UTF-8">
@@ -54,28 +54,9 @@
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@3.3.11/dist/vue.global.js"></script>
 
-  <script>
-    const vue = Vue.createApp({
-      data() {
-        return {
-          roomInModal: {name: null},
-          rooms: []
-        }
-      },
-      async created() {
-        this.rooms = await (await fetch ('http://localhost:8080/rooms')).json();
-      },
-      methods: {
-        getRoom: async function (id) {
-          this.roomInModal = await(await fetch(`http://localhost:8080/rooms/${id}`)).json();
-          let roomInModal = new bootstrap.Modal(document.getElementById('roomInfoModal'), {})
-          roomInModal.show();
-    }
-  }
-    }).mount('#app')
+    <script src="rest-client.js"></script>
 
-  </script>
+  
  
 </body>
-
 </html>

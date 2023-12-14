@@ -1,14 +1,22 @@
+require("dotenv").config()
+const mariadb = require("mariadb")
 const express = require('express');
-const app = express();
-const port = 8080
-const swaggerUI = require('swagger-ui-express');
 const cors = require('cors');
-
-///jkjkjkjkjk
-//muuda yaml fail vastavusse apicurioga
+const app = express();
+//const port = 8080
+const port = process.env.APP_PORT
+const swaggerUI = require('swagger-ui-express');
 const yamljs = require('yamljs');
 const swaggerDocument = yamljs.load('./docs/swagger.yaml');
 
+const pool = mariadb.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    pass: process.env.DB_PASS,
+    name: process.env.DB_NAME,
+    connectionLimit: 5
+
+})
 //const swaggerDocument = require('./docs/swagger.json');
 app.use(cors())
 const rooms =[
@@ -21,6 +29,24 @@ const rooms =[
 ]
 
 app.use(express.json());
+
+app.get("/rooms", async (req, res) => {
+    let connection
+    try{
+        connection = await pool.getConnection()
+        const rows = await connection.query("SELECT * FROM rooms WHERE")
+        console.log(rows)
+        res.send(rows)
+    }catch(error)
+    {
+        throw error
+    } finally {
+        if (connection) return connection.end()
+    }
+    }),
+
+
+
 
 app.get('/rooms', (req, res) => {res.send(rooms)});
 

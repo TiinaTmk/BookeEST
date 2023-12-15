@@ -5,3 +5,8 @@ exports.getAll = async(req,res) => {
     const rooms = await Room.findAll({attributes:["name"]})
     res.send(rooms)
 }
+
+exports.getById = async(req, res) => {
+    const rooms = await Room.findByPk(req.params.Id)
+    res.send(rooms)
+}

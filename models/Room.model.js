@@ -1,27 +1,27 @@
 module.exports = (sequelize, Sequelize) => {
-    const Room = sequelize.define("room", {
+    const Room = sequelize.define("Room", {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
             AutoIncrement: true,
         },
-        name: {
+        Name: {
              type: Sequelize.STRING,
              allowNull: false,
         },
-        price: {
+        Price: {
             type: Sequelize.INTEGER,
             allowNull: true,
         },
-        description: {
+        Description: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        size: {
+        Size: {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
-        available: {
+        Available: {
             type: Sequelize.BOOLEAN,
             allowNull: false,
             defaultvalue: true,

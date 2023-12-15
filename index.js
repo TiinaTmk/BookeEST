@@ -1,28 +1,31 @@
+require("dotenv").config();
 const express = require('express');
 const app = express();
-const port = 8080
+const port = process.env.APP_PORT;
 const swaggerUI = require('swagger-ui-express');
 const cors = require('cors');
-
-///jkjkjkjkjk
-//muuda yaml fail vastavusse apicurioga
 const yamljs = require('yamljs');
 const swaggerDocument = yamljs.load('./docs/swagger.yaml');
-
 //const swaggerDocument = require('./docs/swagger.json');
 app.use(cors())
+
 const rooms =[
-    {id:1, name:"Single with mega city view", price: 120.00, decription:"Super cool room with city view, non-smoking" },
-    {id:2, name:"Suite with bath", price: 900.00, decription:"Super cool room with city view and huuge bath, non-smoking"  },
-    {id:3, name:"Double smoking", price: 120.00, decription:"Super cool room with no view at all, smoking allowed"  },
-    {id:4, name:"Double with city view", price: 150.00, decription:"Super cool room with city view, non-smoking"  },
-    {id:5, name:"Suite with bath and city view", price: 1499.99, decription:"Super cool room with city view, non-smoking, bath and shower" },
-    {id:6, name:"Double with city view and bath", price: 250.01, decription:"Super cool double room with city view, non-smoking"  }
+    {id:1, name:"Single with mega city view", price: 120.00, description:"Super cool room with city view, non-smoking" },
+    {id:2, name:"Suite with bath", price: 900.00, description:"Super cool room with city view and huuge bath, non-smoking"  },
+    {id:3, name:"Double smoking", price: 120.00, description:"Super cool room with no view at all, smoking allowed"  },
+    {id:4, name:"Double with city view", price: 150.00, description:"Super cool room with city view, non-smoking"  },
+    {id:5, name:"Suite with bath and city view", price: 1499.99, description:"Super cool room with city view, non-smoking, bath and shower" },
+    {id:6, name:"Double with city view and bath", price: 250.01, description:"Super cool double room with city view, non-smoking"  }
 ]
 
 app.use(express.json());
 
-app.get('/rooms', (req, res) => {res.send(rooms)});
+require("./routes/app_routes")(app);
+
+app.get("/errors", async (req, res) => {
+    res.statusCode(404).sent({"error": "something went wrong"})
+})
+
 
 app.get('/rooms/:id', (req, res) => {
     if (typeof rooms[req.params.id-1] === 'undefined'){
@@ -32,15 +35,16 @@ res.send(rooms[req.params.id-1]);
 })
 
 app.post('/rooms', (req, res) => {
-    if(!req.params.name || !req.params.price || req.params.decription){
+    if(!req.params.name || !req.params.price || req.params.description){
         return res.status(400).send({error: "One or all parameters that are required are missing"})
     }
     let room = ({
         id: rooms.length + 1,
         name: req.body.name,
         price: req.body.price,
-        decription: req.body.decription
+        description: req.body.description
     })
+
     rooms.push(room)
     
     res.status(201)
@@ -58,7 +62,7 @@ app.delete('/rooms/:id', (req, res) => {
 
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`Api up at: http://localhost:${port}`)});
 
 function getBaseURL(req) {

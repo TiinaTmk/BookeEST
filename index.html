@@ -24,6 +24,7 @@
         <td>{{room.description}}</td>
       </tr>
     </table>
+
     <div id="roomInfoModal" class="modal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -31,13 +32,12 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Modal body text goes here.</p>
-            <div class="table table-stripped">
-              <tr><th>ID</th></tr>{{roomInModal.id}}</td></tr>
-              <tr><th>Name</th></tr>{{roomInModal.name}}</td></tr>
-              <tr><th>Price</th></tr>{{roomInModal.price}}</td></tr>
+            <table class="table table-striped">
+              <tr><th>ID</th><td>{{roomInModal.id}}</td></tr>
+              <tr><th>Name</th><td>{{roomInModal.name}}</td></tr>
+              <tr><th>Price</th><td>{{roomInModal.price}}</td></tr>
+              <tr><th>Description</th><td>{{roomInModal.description}}</td></tr>
             </table>
-            </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -51,28 +51,7 @@
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@3.3.11/dist/vue.global.js"></script>
 
-  <script>
-    const vue = Vue.createApp({
-      data() {
-        return {
-          roomInModal: {name: null},
-          rooms: []
-        }
-      },
-      async created() {
-        this.rooms = await (await fetch ('http://localhost:8080/rooms')).json();
-      },
-      methods: {
-        getRoom: async function (id) {
-          this.roomInModal = await(await fetch(`http://localhost:8080/rooms`)).json();
-          let roomInModal = new bootstrap.Modal(document.getElementById('roomInfoModal'), {})
-          roomInModal.show();
-    }
-  }
-    }).mount('#app')
-
-  </script>
- 
+  <script src="rest-client.js"></script>
 </body>
 
 </html>

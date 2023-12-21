@@ -21,11 +21,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
-        Available: {
-            type: Sequelize.BOOLEAN,
-            allowNull: false,
-            defaultvalue: true,
-        }
+    
     })
 
     return Room

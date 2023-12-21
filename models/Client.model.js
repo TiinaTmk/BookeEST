@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Room = sequelize.define("Room", {
+    const Client = sequelize.define("Client", {
         Id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -9,20 +9,24 @@ module.exports = (sequelize, Sequelize) => {
              type: Sequelize.STRING,
              allowNull: false,
         },
-        Price: {
-            type: Sequelize.INTEGER,
-            allowNull: true,
+        BirthDate: {
+            type: Sequelize.DATE,
+            allowNull: false,
         },
-        Description: {
+        Telephone: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        Size: {
-            type: Sequelize.INTEGER,
+        Email: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        Address: {
+            type: Sequelize.STRING,
             allowNull: false,
         },
     
     })
 
-    return Room
+    return Client
 }

@@ -14,6 +14,5 @@
           let roomInModal = new bootstrap.Modal(document.getElementById('roomInfoModal'), {})
           roomInModal.show();
     }
-
   }
     }).mount('#app')

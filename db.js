@@ -7,7 +7,7 @@ const sequelize = new Sequelize(
         host: process.env.DB_HOST,
         dialect: "mariadb",
         define: {
-            timestamp:false
+            timestamps: false
         }
     }
 )
@@ -15,7 +15,9 @@ const sequelize = new Sequelize(
     const db = {}
     db.Sequelize = Sequelize;
     db.sequelize = sequelize;
-    db.rooms = require("./models/Room.model")(sequelize, Sequelize);
+    db.Rooms = require("./models/Room.model")(sequelize, Sequelize);
+    db.Clients = require("./models/Client.model")(sequelize, Sequelize);
+    //db.Bookings = require("./models/Booking.model")(sequelize, Sequelize);
 
     async function Sync(){
         await sequelize.sync({alter: true}) //kui tabel olemas, lubab muuta, kui ei ole, siis teeb

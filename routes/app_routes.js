@@ -11,7 +11,7 @@ module.exports = (app) => {
         .put(roomsController.updateById)
         .delete(roomsController.deleteById)
 
-         app.route("/clients")
+    app.route("/clients")
         .get(clientsController.getAll)
         .post(clientsController.createNew)
 

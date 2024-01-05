@@ -27,7 +27,8 @@ app.get("/errors", async (req, res) => {
     res.statusCode(404).sent({"error": "something went wrong"})
 })
 
-
+//ROOMS
+//ROOMS-GET BY ID
 app.get('/rooms/:id', (req, res) => {
     if (typeof rooms[req.params.id-1] === 'undefined'){
     return res.status(404).send({error: "Room not found"})
@@ -35,13 +36,7 @@ app.get('/rooms/:id', (req, res) => {
 res.send(rooms[req.params.id-1]);
 })
 
-app.get('/clients/:id', (req, res) => {
-    if (typeof clients[req.params.id-1] === 'undefined'){
-    return res.status(404).send({error: "Client not found"})
-    }
-res.send(clients[req.params.id-1]);
-})
-
+//ROOMS-ADDNEW
 app.post('/rooms', (req, res) => {
     if(!req.params.name || !req.params.price || req.params.description || req.params.size){
         return res.status(400).send({error: "One or all parameters that are required are missing"})
@@ -61,13 +56,25 @@ app.post('/rooms', (req, res) => {
     .send(room)
     });
 
-app.delete('/rooms/:id', (req, res) => {
-    if (typeof rooms[req.params.id-1] === 'undefined'){
-        return res.status(404).send({error: "Room not found"})
+    //ROOMS-DELETE
+    app.delete('/rooms/:id', (req, res) => {
+        if (typeof rooms[req.params.id-1] === 'undefined'){
+            return res.status(404).send({error: "Room not found"})
+        }
+        rooms.splice(req.params.id-1, 1)
+        res.status(204).send({error: "No Content"})
+    })
+
+
+//CLIENTS
+
+app.get('/clients/:id', (req, res) => {
+    if (typeof clients[req.params.id-1] === 'undefined'){
+    return res.status(404).send({error: "Client not found"})
     }
-    rooms.splice(req.params.id-1, 1)
-    res.status(204).send({error: "No Content"})
+res.send(clients[req.params.id-1]);
 })
+
 
 app.delete('/clients/:id', (req, res) => {
     if (typeof clients[req.params.id-1] === 'undefined'){
@@ -88,8 +95,6 @@ app.post('/clients', (req, res) => {
         telephone: req.body.telephone,
         email: req.body.email,
         address: req.body.address,
-
-
     })
 
     clients.push(client)
@@ -98,6 +103,7 @@ app.post('/clients', (req, res) => {
     .location(`${getBaseURL(req)}/clients/${clients.length}`)
     .send(client)
     });
+
 
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 

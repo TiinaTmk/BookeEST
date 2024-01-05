@@ -15,8 +15,8 @@ const sequelize = new Sequelize(
     const db = {}
     db.Sequelize = Sequelize;
     db.sequelize = sequelize;
-    db.Rooms = require("./models/Room.model")(sequelize, Sequelize);
-    db.Clients = require("./models/Client.model")(sequelize, Sequelize);
+    db.Rooms = require("./BookEST-API/models/Room.model")(sequelize, Sequelize);
+    db.Clients = require("./BookEST-API/models/Client.model")(sequelize, Sequelize);
     //db.Bookings = require("./models/Booking.model")(sequelize, Sequelize);
 
     async function Sync(){

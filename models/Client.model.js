@@ -3,7 +3,7 @@ module.exports = (sequelize, Sequelize) => {
         Id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
-            AutoIncrement: true,
+            autoIncrement: true,
         },
         Name: {
              type: Sequelize.STRING,

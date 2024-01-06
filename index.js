@@ -114,3 +114,5 @@ function getBaseURL(req) {
     return req.connection && req.connection.encrypted ? 
     'https:' : 'http'+ `://${req.headers.host}`;
 }
+
+//TODO ADD Bookings

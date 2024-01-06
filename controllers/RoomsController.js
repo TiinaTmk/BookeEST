@@ -2,7 +2,7 @@ const {db} = require("../db")
 const Room = db.Rooms
 
 exports.getAll = async(req,res) => {
-    const rooms = await Room.findAll({attributes:["id","name","price","description","size"]})
+    const rooms = await Room.findAll({attributes:["Id","Name","Price","Description","Size"]})
     res.send(rooms)
 }
 

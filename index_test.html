@@ -13,29 +13,35 @@
 <body>
   <div id="app">
     <div class="container">
-      <div class="row" v-for="room in rooms" :key="room.id">
+      <div class="row" v-for="room in rooms" :key="room.Id">
         <div class="col-12 col-sm-6 bg-info my-2">
-          <div class="m-5 pic_col bg-dark">
-            <td data-bs-toggle="modal" data-bs-target="#roomInfoModal" @click="getRoom(room.id)" v-text="room.name"></td>
+          <div class="m-5 pic_col bg-danger">
+            <div class="h1" v-text="`${room.Name} toa pilt tuleb siia`"></div>
           </div>
         </div>
-
-        <div class="col-12 col-sm-6 bg-dark text-white my-2 d-flex align-items-center justify-content-center">
-          <div class="m-5 details_col bg-info">
-            <div class="row">
-              <div class="col-12">
-                <div v-text="room.name"></div>
-                <div class="pb-5" v-text="`${room.size} Sqm`"></div>
-                <div v-text="room.description"></div>
+       
+          <div class="col-12 col-sm-6 bg-dark text-white my-2 d-flex align-items-center justify-content-center">
+            <div class="m-5 details_col bg-info d-flex align-items-center justify-content-center ">
+              <div class="row">
+                <div class="col-12 text-center">
+                  <div class="h1" v-text="room.Name"></div>
+                  <div class="pb-5" v-text="`${room.Size} ruutmeetrit`"></div>
+                  <div v-text="room.Description"></div>
+                  <button type="button" class="btn btn-primary p-2 mt-5" data-bs-toggle="modal" data-bs-target="#roomInfoModal" @click="getRoom(room.Id)">
+                   Explore Room
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+          
+
       </div>
+    </div>
 
       <!-- Modal placed within the container -->
-      <div id="roomInfoModal" class="modal" tabindex="-1">
-        <div class="modal-dialog">
+      <div id="roomInfoModal" class=" modal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -52,7 +58,7 @@
                 </tr>
                 <tr>
                   <th>Price</th>
-                  <td v-text="roomInModal.Price"></td>
+                  <td v-text="`${roomInModal.Price} EUR`"></td>
                 </tr>
                 <tr>
                   <th>Description</th>
@@ -60,7 +66,7 @@
                 </tr>
                 <tr>
                   <th>Size</th>
-                  <td v-text="roomInModal.Size"></td>
+                  <td v-text="`${roomInModal.Size} Square Meters`"></td>
                 </tr>
               </table>
             </div>

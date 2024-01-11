@@ -47,6 +47,7 @@ app.post('/rooms', (req, res) => {
         price: req.body.price,
         description: req.body.description,
         size:req.body.size,
+        size:req.body.images,
     })
 
     rooms.push(room)

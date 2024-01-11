@@ -1,8 +1,15 @@
-.pic_col{
+/* .pic_col{
 height: 450px;
 width:450px;
-}
+} */
 .details_col{
     height: 450px;
     width:450px;
+}
+
+.images{
+    min-height: auto;
+    align-self: center;
+    object-fit: contain;
+
 }

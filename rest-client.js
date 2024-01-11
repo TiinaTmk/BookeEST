@@ -27,6 +27,11 @@ methods: {
       console.log('Fetching room data...');
       this.roomInModal = await (await fetch(`http://localhost:8080/rooms/${id}`)).json();
       console.log('Room data:', this.roomInModal);
-    }
+    },
+    renderImage(imageData) {
+        // Assuming imageData is base64-encoded image data
+        return `<img src="data:image/png;base64,${imageData}" alt="Room Image" class="img-fluid">`;
+      },
+
 }      
 }).mount('#app')	

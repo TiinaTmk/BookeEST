@@ -10,15 +10,6 @@ const swaggerDocument = yamljs.load('./docs/swagger.yaml');
 
 app.use(cors())
 
-// const rooms =[
-//     {id:1, name:"Single with mega city view", price: 120.00, description:"Super cool room with city view, non-smoking" },
-//     {id:2, name:"Suite with bath", price: 900.00, description:"Super cool room with city view and huuge bath, non-smoking"  },
-//     {id:3, name:"Double smoking", price: 120.00, description:"Super cool room with no view at all, smoking allowed"  },
-//     {id:4, name:"Double with city view", price: 150.00, description:"Super cool room with city view, non-smoking"  },
-//     {id:5, name:"Suite with bath and city view", price: 1499.99, description:"Super cool room with city view, non-smoking, bath and shower" },
-//     {id:6, name:"Double with city view and bath", price: 250.01, description:"Super cool double room with city view, non-smoking"  }
-// ]
-
 app.use(express.json());
 
 require("./routes/app_routes")(app);
@@ -105,6 +96,45 @@ app.post('/clients', (req, res) => {
     .send(client)
     });
 
+    //Bookings
+
+    app.get('/bookings/:id', (req, res) => {
+        if (typeof bookings[req.params.id-1] === 'undefined'){
+        return res.status(404).send({error: "Boking not found"})
+        }
+    res.send(bookings[req.params.id-1]);
+    })
+    
+    
+    app.delete('/bookings/:id', (req, res) => {
+        if (typeof bookings[req.params.id-1] === 'undefined'){
+            return res.status(404).send({error: "booking not found"})
+        }
+        bookings.splice(req.params.id-1, 1)
+        res.status(204).send({error: "No Content"})
+    })
+    
+    app.post('/bookings', (req, res) => {
+        if(!req.params.RoomID || !req.params.ClientID || req.params.StartTime || !req.params.EndTime || !req.params.Status || !req.params.DateCancelled ){
+            return res.status(400).send({error: "One or all parameters that are required are missing"})
+        }
+        let booking = ({
+            id: bookings.length + 1,
+            RoomID: req.body.RoomID,
+            ClientID: req.body.ClientID,
+            StartTime: req.body.StartTime,
+            EndTime: req.body.EndTime,
+            Status: req.body.Status,
+            DateCancelled: req.body.DateCancelled
+        })
+    
+        bookings.push(booking)
+        
+        res.status(201)
+        .location(`${getBaseURL(req)}/bookings/${bookings.length}`)
+        .send(booking)
+        });
+
 
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
@@ -115,5 +145,3 @@ function getBaseURL(req) {
     return req.connection && req.connection.encrypted ? 
     'https:' : 'http'+ `://${req.headers.host}`;
 }
-
-//TODO ADD Bookings

@@ -1,21 +1,22 @@
+
 module.exports = (sequelize, Sequelize, Client, Room) => {
     const Booking = sequelize.define("Booking", {
         Id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
-            AutoIncrement: true
+            autoIncrement: true
         },
         RoomID: {
              type: Sequelize.INTEGER,
              references: {
                 model: Room,
-                key: "id",
+                key: "Id",
         }},
         ClientID: {
             type: Sequelize.INTEGER,
             references: {
                 model: Client,
-                key: "id",
+                key: "Id",
             }
            
         },
@@ -29,7 +30,8 @@ module.exports = (sequelize, Sequelize, Client, Room) => {
         },
         Status: {
             type: Sequelize.STRING,
-            allowNull: true,
+            allowNull: false,
+            defaultValue: 'booked'
         },
         DateCancelled: {
             type: Sequelize.DATEONLY,
@@ -37,7 +39,9 @@ module.exports = (sequelize, Sequelize, Client, Room) => {
         },
 
     })
-    Room.belongsToMany(Client,{through: Booking});
-    Client.belongsToMany(Room,{through: Booking});
+
+    Room.belongsToMany(Client,{through: Booking, foreignKey: 'RoomID'});
+    Client.belongsToMany(Room,{through: Booking, foreignKey: 'ClientID'});
+
     return Booking
 }

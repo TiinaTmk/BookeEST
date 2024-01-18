@@ -1,5 +1,35 @@
-const {db} = require("../db")
-const Booking = db.Bookings
+const {db} = require("../db");
+const Booking = db.Bookings;
+const Client = db.Clients;
+
+exports.createNewBooking = async (req, res) => {
+  try {
+      // Create a new client
+      const client = await Client.create(req.body.clientData);
+
+      // Create a new booking
+      const booking = await Booking.create({
+          RoomID: req.body.RoomID,
+          ClientID: client.Id,
+          StartTime: req.body.StartTime,
+          EndTime: req.body.EndTime,
+          // Status: req.body.Status,
+          Status: req.body.status || 'booked',
+
+      });
+      res.status(201).json({ success: true, bookingId: booking.Id });
+
+    } catch (error) {
+      console.error(error);
+        if (error instanceof db.Sequelize.ValidationError) {
+            console.log(error);
+            res.status(400).send({ "error": error.errors.map((item) => item.message) });
+        } else {
+            console.log("Booking created: ", error);
+            res.status(500).send({ error: "Something has gone wrong" });
+        }
+    }
+};
 
 exports.getAll = async(req,res) => {
     const bookings = await Booking.findAll({attributes:["Id","RoomID","ClientID","StartTime","EndTime","Status","DateCancelled"]})
@@ -11,26 +41,26 @@ exports.getById = async(req, res) => {
     res.send(bookings)
 }
 
-exports.createNew = async(req, res) => {
-    let booking 
-    try {
-        booking = await Booking.create(req.body)
-    } catch (error) {
-       if (error instanceof db.Sequelize.ValidationError) {
-        console.log(error)
-        res.status(400).send({"error": error.errors.map((item)=>item.message)})
-    } else {
-        console.log("Booking created: ", error)
-        res.status(500).send({error:"something has gone wrong"})
-        }
-        return
-    }
-    res
-    .status(201)
-    .location(`${getBaseUrl()}/bookings/${booking.id}`)
-    .json(booking);
-    console.log(booking);	
-}
+// exports.createNew = async(req, res) => {
+//     let booking 
+//     try {
+//         booking = await Booking.create(req.body)
+//     } catch (error) {
+//        if (error instanceof db.Sequelize.ValidationError) {
+//         console.log(error)
+//         res.status(400).send({"error": error.errors.map((item)=>item.message)})
+//     } else {
+//         console.log("Booking created: ", error)
+//         res.status(500).send({error:"something has gone wrong"})
+//         }
+//         return
+//     }
+//     res
+//     .status(201)
+//     .location(`${getBaseUrl()}/bookings/${booking.id}`)
+//     .json(booking);
+//     console.log(booking);	
+// }
 
 exports.deleteById = async (req, res) => {
     let result
@@ -104,6 +134,7 @@ exports.deleteById = async (req, res) => {
                 StartTime: startTime,
                 EndTime: endTime,
                 Status: "booked",
+                // DateCancelled: null
               };
               return await Booking.create(bookingData);
             })
@@ -114,6 +145,8 @@ exports.deleteById = async (req, res) => {
           res.status(500).send({ error: "Something has gone wrong" });
         }
       };
+
+      
 
 getBaseUrl = (request) => { 
     return (

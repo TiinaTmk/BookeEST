@@ -1,6 +1,6 @@
 const roomsController = require("../controllers/RoomsController");
 const clientsController = require("../controllers/ClientsController");
-//const bookingController = require("../controllers/BookingController");
+const bookingController = require("../controllers/BookingController");
 
 module.exports = (app) => {
   app.route("/rooms")
@@ -21,16 +21,16 @@ module.exports = (app) => {
     .put(clientsController.updateById)
     .delete(clientsController.deleteById);
 
-//   app.route("/bookings")
-//     .get(bookingController.getAll)
-//     .post(bookingController.createNew);
+  app.route("/bookings")
+    .get(bookingController.getAll)
+    // .post(bookingController.createNew)
+    .post(bookingController.createNewBooking);
 
-//   app.route("/bookings/:id")
-//     .get(bookingController.getById)
-//     .put(bookingController.updateById)
-//     .delete(bookingController.deleteById);
+  app.route("/bookings/:id")
+    .get(bookingController.getById)
+    .put(bookingController.updateById)
+    .delete(bookingController.deleteById);
 
-//   // New routes
 //   app.route("/bookings/book-all")
 //     .post(bookingController.bookAllRooms); // Route for booking all rooms at once
 

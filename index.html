@@ -12,6 +12,47 @@
 
 <body>
   <div id="app">
+    <form class="row domain-search my-5">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-3 px-5 mt-0 pt-0">
+                  <h1 class="form-title text-dark">Find Your <strong>Reservation</strong></h1>
+              </div>
+              <div class="col-md-9 mt-3">
+                  <div class="input-group">
+                      <input type="search" class="form-control" placeholder="Find/Update your booking">
+                      <span class="input-group-addon"><input type="submit" value="Search" class="btn btn-primary"></span>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </form>
+
+    <form class="booking-form px-5">                 
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <input v-model="bookingForm.checkIn" class="form-control" type="date" id="startTime" name="startTime" required>
+            <span class="form-label">Check In</span>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <input v-model="bookingForm.checkOut" class="form-control" type="date" id="endTime" name="endTime" required>
+            <span class="form-label">Check out</span>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-btn">
+            <button class="submit-btn-btn" data-bs-toggle="modal" data-bs-target="#bookAllModal"v-on:click="openBookAllModal">
+              Book ALL Rooms
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+   
+
     <div class="container">
       <div class="row" v-for="room in rooms" :key="room.Id">
         <div class="col-12 col-sm-6 d-flex align-items-center justify-content-center my-2">
@@ -27,12 +68,10 @@
                   <div class="h1" v-text="room.Name"></div>
                   <div class="pb-3 pt-4" v-text="`${room.Size} ruutmeetrit`"></div>
                   <div v-text="room.Description"></div>
-                 
                   <button type="button" class="btn btn btn-dark p-2 mt-5 mx-5" data-bs-toggle="modal" data-bs-target="#roomInfoModal" v-on:click="getRoom(room.Id)">
                     Explore Room
                   </button>
-
-                <button type="button" class="btn btn btn-outline-secondary p-2 mt-5 mx-5" v-on:click="openBookingModal(room.Id)">
+                <button type="button frm-btn" class="btn btn btn-outline-secondary p-2 mt-5 mx-5" v-on:click="openBookingModal(room.Id)">
                     Book This Room
                 </button>
                 </div>
@@ -42,7 +81,41 @@
       </div>
     </div>
 
-      <!-- Modal placed within the container -->
+    <!-- Book alla rooms modal -->
+    <div class="modal fade" id="bookAllModal" tabindex="-1" aria-labelledby="bookAllModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content text-center">
+            <div class="modal-header">
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h5 class="modal-title mb-4" id="bookAllModalLabel">Available Rooms</h5>
+              <div v-if="availableRooms.length === 0">
+                No available rooms
+              </div>
+            
+              <div v-else>
+                <div v-for="room in availableRooms" :key="room.Id">
+                    <!-- Display room information here -->
+                    <img class="img-fluid images" :src="room.Images"></img>
+                    <div>{{ room.Name }}</div>
+                    <div>{{ room.Size }}</div>
+                    <div>{{ room.Description }}</div>
+                    <div>{{ room.Price }}</div>
+                    <hr class="my-3">
+                </div>
+              </div>
+              <button class="btn btn-primary" @click="bookAllAvailableRooms">Book All Rooms</button>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!-- roominfomodal -->
       <div id="roomInfoModal" class=" modal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
           <div class="modal-content text-center">
@@ -103,13 +176,13 @@
                               <div class="row">
                                 <div class="col-md-6">
                                   <div class="form-group">
-                                    <input v-model="bookingForm.name" class="form-control" type="text" placeholder="Enter your name">
+                                    <input v-model="bookingForm.name" class="form-control" type="text" placeholder="Enter your name" required>
                                     <span class="form-label">Name</span>
                                   </div>
                                 </div>
                                 <div class="col-md-6">
                                   <div class="form-group">
-                                    <input v-model="bookingForm.birthDate" class="form-control" type="date" placeholder="Enter your Date of Birth">
+                                    <input v-model="bookingForm.birthDate" class="form-control" type="date" placeholder="Enter your Date of Birth" required>
                                     <span class="form-label">BirthDate</span>
                                   </div>
                                 </div>
@@ -117,19 +190,19 @@
                               <div class="row">
                                 <div class="col-md-6">
                                   <div class="form-group">
-                                    <input v-model="bookingForm.email" class="form-control" type="email" placeholder="Enter your Email">
+                                    <input v-model="bookingForm.email" class="form-control" type="email" placeholder="Enter your Email" required>
                                     <span class="form-label">Email</span>
                                   </div>
                                 </div>
                                 <div class="col-md-6">
                                   <div class="form-group">
-                                    <input v-model="bookingForm.telephone" class="form-control" type="tel" placeholder="Enter your Phone">
+                                    <input v-model="bookingForm.telephone" class="form-control" type="tel" placeholder="Enter your Phone" required>
                                     <span class="form-label">Phone</span>
                                   </div>
                                 </div>
                               </div>
                               <div class="form-group">
-                                <input v-model="bookingForm.address" class="form-control" type="text" placeholder="Add your address">
+                                <input v-model="bookingForm.address" class="form-control" type="text" placeholder="Add your address" required>
                                 <span class="form-label">Address</span>
                               </div>
                               <div class="form-btn">

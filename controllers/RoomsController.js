@@ -6,11 +6,27 @@ exports.getAll = async(req,res) => {
     res.send(rooms)
 }
 
-// exports.getAvaialable = async(req,res) => {
-//     const availableRooms = await db.sequelize.query("SELECT * FROM bookings",{type: db.sequelize.QueryTypes.SELECT})
-//     res.send(avaialbeRooms)
-// }
+exports.getAvailable = async(req,res) => {
+    const innerQueryResult = await db.sequelize.query(
+        "SELECT RoomID FROM Bookings WHERE StartTime >= CURDATE() and Status not in ('Cancelled')",
+        { type: db.sequelize.QueryTypes.SELECT }
+      );
+      
+      // Extract RoomID values from the innerQueryResult array
+      const roomIds = innerQueryResult.map(result => result.RoomID);
+      
+      // Check if there are any RoomIDs before proceeding with the main query
+      if (roomIds.length > 0) {
+        const availableRooms = await db.sequelize.query(
+          `SELECT * FROM Rooms WHERE Id NOT IN (${roomIds.join(',')})`,
+          { type: db.sequelize.QueryTypes.SELECT }
+        );
+        res.send(availableRooms)
 
+      } else {
+        console.log("No available rooms based on the inner query criteria.");
+      }
+}
 
 exports.getById = async(req, res) => {
     const rooms = await Room.findByPk(req.params.id)

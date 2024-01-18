@@ -31,6 +31,110 @@ exports.createNewBooking = async (req, res) => {
     }
 };
 
+// exports.bookAllAvailableRooms = async (req, res) => {
+//   try {
+//     const { startTime, endTime } = req.body;
+
+//     // Fetch available rooms within the specified date range
+//     const availableRooms = await getAvailableRooms(startTime, endTime);
+
+//     // Book all available rooms
+//     await bookRooms(availableRooms, startTime, endTime);
+
+//     res.status(200).send({ success: true, message: "All available rooms booked successfully." });
+//   } catch (error) {
+//     console.error("Error booking all available rooms:", error);
+//     res.status(500).send({ success: false, error: "Internal server error." });
+//   }
+// };
+
+// // Function to fetch available rooms within a date range
+// const getAvailableRooms = async (startDate, endDate) => {
+//   const innerQueryResult = await db.sequelize.query(
+//     "SELECT RoomID FROM Bookings WHERE (StartTime < :endDate AND EndTime > :startDate) AND Status NOT IN ('Cancelled')",
+//     {
+//       replacements: { startDate, endDate },
+//       type: db.sequelize.QueryTypes.SELECT,
+//     }
+//   );
+
+//   const bookedRoomIds = innerQueryResult.map(result => result.RoomID);
+
+//   const availableRooms = await db.sequelize.query(
+//     `SELECT * FROM Rooms WHERE Id NOT IN (${bookedRoomIds.join(',')})`,
+//     { type: db.sequelize.QueryTypes.SELECT }
+//   );
+
+//   return availableRooms;
+// };
+
+// // Function to book rooms for the specified date range
+// const bookRooms = async (rooms, startDate, endDate) => {
+//   const bookingPromises = rooms.map(async room => {
+//      // Create a new client
+//      const client = await Client.create(req.body.clientData);
+//     // Create a booking for each room
+//     const bookingData = {
+//           RoomID: req.body.RoomID,
+//           ClientID: client.Id,
+//           StartTime: req.body.StartTime,
+//           EndTime: req.body.EndTime,
+//           Status: req.body.status || 'booked',
+//     };
+
+//     // Create the booking
+//     await Booking.create(bookingData);
+//   });
+
+//   // Wait for all bookings to be created
+//   await Promise.all(bookingPromises);
+// };
+
+// Function to book rooms for the specified date range
+const bookRooms = async (rooms, startDate, endDate, clientData) => {
+  try {
+    // Create a new client
+    const client = await Client.create(clientData);
+
+    const bookingPromises = rooms.map(async room => {
+      // Create a booking for each room
+      const bookingData = {
+        RoomID: room.Id,
+        ClientID: client.Id,
+        StartTime: startDate,
+        EndTime: endDate,
+        Status: 'booked',
+      };
+
+      // Create the booking
+      await Booking.create(bookingData);
+    });
+
+    // Wait for all bookings to be created
+    await Promise.all(bookingPromises);
+  } catch (error) {
+    console.error("Error booking rooms:", error);
+    throw error;
+  }
+};
+
+exports.bookAllAvailableRooms = async (req, res) => {
+  try {
+    const { startTime, endTime, clientData } = req.body;
+
+    // Fetch available rooms within the specified date range
+    const availableRooms = await getAvailableRooms(startTime, endTime);
+
+    // Book all available rooms
+    await bookRooms(availableRooms, startTime, endTime, clientData);
+
+    res.status(200).send({ success: true, message: "All available rooms booked successfully." });
+  } catch (error) {
+    console.error("Error booking all available rooms:", error);
+    res.status(500).send({ success: false, error: "Internal server error." });
+  }
+};
+
 exports.getAll = async(req,res) => {
     const bookings = await Booking.findAll({attributes:["Id","RoomID","ClientID","StartTime","EndTime","Status","DateCancelled"]})
     res.send(bookings)
@@ -41,33 +145,12 @@ exports.getById = async(req, res) => {
     res.send(bookings)
 }
 
-// exports.createNew = async(req, res) => {
-//     let booking 
-//     try {
-//         booking = await Booking.create(req.body)
-//     } catch (error) {
-//        if (error instanceof db.Sequelize.ValidationError) {
-//         console.log(error)
-//         res.status(400).send({"error": error.errors.map((item)=>item.message)})
-//     } else {
-//         console.log("Booking created: ", error)
-//         res.status(500).send({error:"something has gone wrong"})
-//         }
-//         return
-//     }
-//     res
-//     .status(201)
-//     .location(`${getBaseUrl()}/bookings/${booking.id}`)
-//     .json(booking);
-//     console.log(booking);	
-// }
-
 exports.deleteById = async (req, res) => {
     let result
     try {
         result = await Booking.destroy({where: {id: req.params.id}})
     } catch (error) {
-        console.log("Booking deleted: ", error)
+        console.log("Booking cancelled: ", error)
         res.status(500).send({error:"something has gone wrong"})
         return
        
@@ -120,33 +203,7 @@ exports.deleteById = async (req, res) => {
         }
       };
 
-      exports.bookAllRooms = async (req, res) => {
-        const { clientId, startTime, endTime } = req.body;
-      
-        try {
-          const rooms = await db.Rooms.findAll({ attributes: ["Id"] });
-      
-          const bookings = await Promise.all(
-            rooms.map(async (room) => {
-              const bookingData = {
-                RoomID: room.Id,
-                ClientID: clientId,
-                StartTime: startTime,
-                EndTime: endTime,
-                Status: "booked",
-                // DateCancelled: null
-              };
-              return await Booking.create(bookingData);
-            })
-          );
-          res.status(201).send({ message: "All rooms booked successfully", bookings });
-        } catch (error) {
-          console.log("Book all rooms: ", error);
-          res.status(500).send({ error: "Something has gone wrong" });
-        }
-      };
-
-      
+    
 
 getBaseUrl = (request) => { 
     return (

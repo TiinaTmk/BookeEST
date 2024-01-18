@@ -17,6 +17,8 @@ const vue = Vue.createApp({
                 address: '',
                 roomID: null, // Added for room ID
               },
+              availableRooms: [],
+              cliendData:[],
         };
     },
      
@@ -46,6 +48,17 @@ methods: {
             console.error('Error fetching room data:', error);
         }
     },
+
+    // getAvailable: async function () {
+    //     try {
+    //         console.log('Fetching room data...');
+    //         this.roomInModal = await (await fetch(`http://localhost:8080/availablerooms/`)).json();
+    //         console.log('Room data:', this.roomInModal);
+            
+    //     } catch (error) {
+    //         console.error('Error fetching room data:', error);
+    //     }
+    // },
 
     openBookingModal: async function(roomId) {
         try {
@@ -137,5 +150,23 @@ methods: {
         this.bookingInModal = await (await fetch(`http://localhost:8080/bookings/${id}`)).json();
         console.log('Booking data:', this.bookingInModal);
     },
+
+    getAvailableRooms: async function () {
+        try {
+            console.log('Fetching available rooms data...');
+            const response = await fetch(`http://localhost:8080/getavailablerooms/`);
+            const availableRoomsData = await response.json();
+    
+            // Assuming that the server response is an array of available rooms
+            this.availableRooms = availableRoomsData;
+    
+            // For debugging purposes, log the available rooms
+            console.log('Available rooms data:', this.availableRooms);
+        } catch (error) {
+            console.error('Error fetching available rooms data:', error);
+        }
+    },
+    
+
 },
 }).mount('#app');

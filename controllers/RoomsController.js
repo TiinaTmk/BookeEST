@@ -6,6 +6,12 @@ exports.getAll = async(req,res) => {
     res.send(rooms)
 }
 
+// exports.getAvaialable = async(req,res) => {
+//     const availableRooms = await db.sequelize.query("SELECT * FROM bookings",{type: db.sequelize.QueryTypes.SELECT})
+//     res.send(avaialbeRooms)
+// }
+
+
 exports.getById = async(req, res) => {
     const rooms = await Room.findByPk(req.params.id)
     res.send(rooms)

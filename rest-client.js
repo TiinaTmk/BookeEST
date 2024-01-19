@@ -15,13 +15,15 @@ const vue = Vue.createApp({
                 email: '',
                 telephone: '',
                 address: '',
-                roomID: null, // Added for room ID
+                roomID: null,
               },
               availableRooms: [],
-              cliendData:[],
+              availableRoomsData: [],
+              clientData:[],
         };
     },
-     
+
+         
     async created() {
         try {
             this.rooms = await (await fetch('http://localhost:8080/rooms')).json();
@@ -48,17 +50,6 @@ methods: {
             console.error('Error fetching room data:', error);
         }
     },
-
-    // getAvailable: async function () {
-    //     try {
-    //         console.log('Fetching room data...');
-    //         this.roomInModal = await (await fetch(`http://localhost:8080/availablerooms/`)).json();
-    //         console.log('Room data:', this.roomInModal);
-            
-    //     } catch (error) {
-    //         console.error('Error fetching room data:', error);
-    //     }
-    // },
 
     openBookingModal: async function(roomId) {
         try {
@@ -151,22 +142,61 @@ methods: {
         console.log('Booking data:', this.bookingInModal);
     },
 
-    getAvailableRooms: async function () {
-        try {
-            console.log('Fetching available rooms data...');
-            const response = await fetch(`http://localhost:8080/getavailablerooms/`);
-            const availableRoomsData = await response.json();
+//     getAvailableRooms: async function () {
+//         try {
+//             console.log('Fetching available rooms data...');
+//             const response = await fetch(`http://localhost:8080/getavailablerooms/`);
+//             const availableRoomsData = await response.json();
     
-            // Assuming that the server response is an array of available rooms
-            this.availableRooms = availableRoomsData;
+//             // Assuming that the server response is an array of available rooms
+//             this.availableRooms = availableRoomsData;
     
-            // For debugging purposes, log the available rooms
-            console.log('Available rooms data:', this.availableRooms);
-        } catch (error) {
-            console.error('Error fetching available rooms data:', error);
-        }
-    },
-    
+//             // For debugging purposes, log the available rooms
+//             console.log('Available rooms data:', this.availableRooms);
+//         } catch (error) {
+//             console.error('Error fetching available rooms data:', error);
+//         }
+//     },
 
+//    bookAllAvailableRooms: async function() {
+        
+//             try {
+//               const formData = {
+//                 startTime: this.bookingForm.checkIn,
+//                 endTime: this.bookingForm.checkOut,
+
+//                 clientData: {
+//                   Name: this.bookingForm.name,
+//                   BirthDate: this.bookingForm.birthDate,
+//                   Telephone: this.bookingForm.telephone,
+//                   Email: this.bookingForm.email,
+//                   Address: this.bookingForm.address,
+//                 },
+//               };
+
+//               const response = await fetch('http://localhost:8080/bookAllAvailableRooms', {
+//                 method: 'POST',
+//                 headers: {
+//                   'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify(formData),
+//               });
+          
+//           const result = await response.json();
+         
+//           // If the request is successful, update availableRooms and open the modal
+//     if (result.success) {
+//         this.availableRooms = result.availableRooms;   
+//         // Open the modal to display available rooms
+//         const bookAllModal = new bootstrap.Modal(document.getElementById('bookAllModal'), {});
+//         bookAllModal.show();
+//       } else {
+//         console.error('Error fetching available rooms:', result.error);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching available rooms:', error);
+//     }
+//   }
 },
+
 }).mount('#app');

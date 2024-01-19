@@ -31,32 +31,17 @@ exports.createNewBooking = async (req, res) => {
     }
 };
 
-// exports.bookAllAvailableRooms = async (req, res) => {
-//   try {
-//     const { startTime, endTime } = req.body;
-
-//     // Fetch available rooms within the specified date range
-//     const availableRooms = await getAvailableRooms(startTime, endTime);
-
-//     // Book all available rooms
-//     await bookRooms(availableRooms, startTime, endTime);
-
-//     res.status(200).send({ success: true, message: "All available rooms booked successfully." });
-//   } catch (error) {
-//     console.error("Error booking all available rooms:", error);
-//     res.status(500).send({ success: false, error: "Internal server error." });
-//   }
-// };
-
-// // Function to fetch available rooms within a date range
-// const getAvailableRooms = async (startDate, endDate) => {
+// Function to fetch available rooms within a date range
+// exports.getAvailableRooms = async (StartDate, EndDate) => {
+//   console.log(StartDate, EndDate);
 //   const innerQueryResult = await db.sequelize.query(
-//     "SELECT RoomID FROM Bookings WHERE (StartTime < :endDate AND EndTime > :startDate) AND Status NOT IN ('Cancelled')",
+//     "SELECT RoomID FROM Bookings WHERE (StartTime > CAST(:startDate AS DATE) AND EndTime < CAST(:endDate AS DATE) AND Status NOT IN ('Cancelled'))",
 //     {
-//       replacements: { startDate, endDate },
+//       replacements: { startDate: StartDate, endDate: EndDate },
 //       type: db.sequelize.QueryTypes.SELECT,
 //     }
 //   );
+  
 
 //   const bookedRoomIds = innerQueryResult.map(result => result.RoomID);
 
@@ -69,71 +54,49 @@ exports.createNewBooking = async (req, res) => {
 // };
 
 // // Function to book rooms for the specified date range
-// const bookRooms = async (rooms, startDate, endDate) => {
-//   const bookingPromises = rooms.map(async room => {
-//      // Create a new client
-//      const client = await Client.create(req.body.clientData);
-//     // Create a booking for each room
-//     const bookingData = {
-//           RoomID: req.body.RoomID,
-//           ClientID: client.Id,
-//           StartTime: req.body.StartTime,
-//           EndTime: req.body.EndTime,
-//           Status: req.body.status || 'booked',
-//     };
+// const bookRooms = async (rooms, StartDate, EndDate, clientData) => {
+//   try {
+//     // Create a new client
+//     const client = await Client.create(clientData);
 
-//     // Create the booking
-//     await Booking.create(bookingData);
-//   });
+//     const bookingPromises = rooms.map(async room => {
+//       // Create a booking for each room
+//       const bookingData = {
+//         RoomID: room.Id,
+//         ClientID: client.Id,
+//         StartTime: StartDate,
+//         EndTime: EndDate,
+//         Status: 'booked',
+//       };
 
-//   // Wait for all bookings to be created
-//   await Promise.all(bookingPromises);
+//       // Create the booking
+//       return Booking.create(bookingData);
+//     });
+
+//     // Wait for all bookings to be created
+//     await Promise.all(bookingPromises);
+//   } catch (error) {
+//     console.error("Error booking rooms:", error);
+//     throw error;
+//   }
 // };
 
-// Function to book rooms for the specified date range
-const bookRooms = async (rooms, startDate, endDate, clientData) => {
-  try {
-    // Create a new client
-    const client = await Client.create(clientData);
+// exports.bookAllAvailableRooms = async (req, res) => {
+//   try {
+//     const { StartTime, EndTime, clientData } = req.body;
 
-    const bookingPromises = rooms.map(async room => {
-      // Create a booking for each room
-      const bookingData = {
-        RoomID: room.Id,
-        ClientID: client.Id,
-        StartTime: startDate,
-        EndTime: endDate,
-        Status: 'booked',
-      };
+//     // Fetch available rooms within the specified date range
+//     const availableRooms = await getAvailableRooms(StartTime, EndTime);
 
-      // Create the booking
-      await Booking.create(bookingData);
-    });
+//     // Book all available rooms
+//     await bookRooms(availableRooms, StartTime, EndTime, clientData);
 
-    // Wait for all bookings to be created
-    await Promise.all(bookingPromises);
-  } catch (error) {
-    console.error("Error booking rooms:", error);
-    throw error;
-  }
-};
-
-exports.bookAllAvailableRooms = async (req, res) => {
-  try {
-    const { startTime, endTime, clientData } = req.body;
-
-    // Fetch available rooms within the specified date range
-    const availableRooms = await getAvailableRooms(startTime, endTime);
-
-    // Book all available rooms
-    await bookRooms(availableRooms, startTime, endTime, clientData);
-
-    res.status(200).send({ success: true, message: "All available rooms booked successfully." });
-  } catch (error) {
-    console.error("Error booking all available rooms:", error);
-    res.status(500).send({ success: false, error: "Internal server error." });
-  }
-};
+//     res.status(200).send({ success: true, message: "All available rooms booked successfully." });
+//   } catch (error) {
+//     console.error("Error booking all available rooms:", error);
+//     res.status(500).send({ success: false, error: "Internal server error." });
+//   }
+// };
 
 exports.getAll = async(req,res) => {
     const bookings = await Booking.findAll({attributes:["Id","RoomID","ClientID","StartTime","EndTime","Status","DateCancelled"]})
@@ -146,6 +109,7 @@ exports.getById = async(req, res) => {
 }
 
 exports.deleteById = async (req, res) => {
+  
     let result
     try {
         result = await Booking.destroy({where: {id: req.params.id}})
@@ -184,24 +148,24 @@ exports.deleteById = async (req, res) => {
         .json(booking)
     }
    
-    exports.cancelAllBookings = async (req, res) => {
-        try {
-          const currentDate = new Date();
-          const result = await Booking.update(
-            { Status: "cancelled", DateCancelled: currentDate },
-            { where: {} }
-          );
+    // exports.cancelAllBookings = async (req, res) => {
+    //     try {
+    //       const currentDate = new Date();
+    //       const result = await Booking.update(
+    //         { Status: "cancelled", DateCancelled: currentDate },
+    //         { where: {} }
+    //       );
       
-          if (result[0] === 0) {
-            res.status(404).send({ error: "No bookings found" });
-            return;
-          }
-          res.status(200).send({ message: "All bookings cancelled successfully" });
-        } catch (error) {
-          console.log("Cancel all bookings: ", error);
-          res.status(500).send({ error: "Something has gone wrong" });
-        }
-      };
+    //       if (result[0] === 0) {
+    //         res.status(404).send({ error: "No bookings found" });
+    //         return;
+    //       }
+    //       res.status(200).send({ message: "All bookings cancelled successfully" });
+    //     } catch (error) {
+    //       console.log("Cancel all bookings: ", error);
+    //       res.status(500).send({ error: "Something has gone wrong" });
+    //     }
+    //   };
 
     
 

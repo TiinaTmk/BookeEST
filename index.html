@@ -82,7 +82,7 @@
     </div>
 
     <!-- Book alla rooms modal -->
-    <div class="modal fade" id="bookAllModal" tabindex="-1" aria-labelledby="bookAllModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="bookAllModal" tabindex="-1" aria-labelledby="bookAllModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content text-center">
             <div class="modal-header">
@@ -96,7 +96,6 @@
             
               <div v-else>
                 <div v-for="room in availableRooms" :key="room.Id">
-                    <!-- Display room information here -->
                     <img class="img-fluid images" :src="room.Images"></img>
                     <div>{{ room.Name }}</div>
                     <div>{{ room.Size }}</div>
@@ -107,7 +106,6 @@
               </div>
               <button class="btn btn-primary" @click="bookAllAvailableRooms">Book All Rooms</button>
             </div>
-
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
@@ -115,7 +113,7 @@
         </div>
       </div>
 
-<!-- roominfomodal -->
+<--roominfomodal -->
       <div id="roomInfoModal" class=" modal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
           <div class="modal-content text-center">

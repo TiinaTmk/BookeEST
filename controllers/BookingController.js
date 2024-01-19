@@ -109,7 +109,7 @@ exports.getById = async(req, res) => {
 }
 
 exports.deleteById = async (req, res) => {
-  
+
     let result
     try {
         result = await Booking.destroy({where: {id: req.params.id}})
@@ -167,8 +167,8 @@ exports.deleteById = async (req, res) => {
     //     }
     //   };
 
+    ///TODO
     
-
 getBaseUrl = (request) => { 
     return (
         (request.connection && request.connection.encrypted ? "https" : "http") + 

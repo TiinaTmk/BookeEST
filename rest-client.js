@@ -17,9 +17,9 @@ const vue = Vue.createApp({
                 address: '',
                 roomID: null,
               },
-              availableRooms: [],
-              availableRoomsData: [],
-              clientData:[],
+            //   availableRooms: [],
+            //   availableRoomsData: [],
+            //   clientData:[],
         };
     },
 

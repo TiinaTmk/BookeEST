@@ -12,49 +12,46 @@
 
 <body>
   <div id="app">
-
-  <form class="row domain-search my-5" v-on:submit.prevent="searchBooking">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3 px-5 mt-0 pt-0">
-        <h1 class="form-title text-dark">Find Your <strong>Reservation</strong></h1>
+    <form class="row domain-search my-5">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-3 px-5 mt-0 pt-0">
+                  <h1 class="form-title text-dark">Find Your <strong>Reservation</strong></h1>
+              </div>
+              <div class="col-md-9 mt-3">
+                  <div class="input-group">
+                      <input type="search" class="form-control" placeholder="Find/Update your booking">
+                      <span class="input-group-addon"><input type="submit" value="Search" class="btn btn-primary"></span>
+                  </div>
+              </div>
+          </div>
       </div>
-      <div class="col-md-9 mt-3">
-        <div class="input-group">
-          <input v-model="searchBookingId" type="search" class="form-control" placeholder="Find/Update your booking">
-          <span class="input-group-addon">
-            <button type="submit" class="btn btn-primary">Search</button>
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
-
+  </form>
 
     <form class="booking-form px-5">                 
       <div class="row">
         <div class="col">
           <div class="form-group">
-            <input v-model="bookingForm.checkIn" class="form-control" type="date" id="StartTime" name="StartTime" required>
+            <input v-model="bookingForm.checkIn" class="form-control" type="date" id="startTime" name="startTime" required>
             <span class="form-label">Check In</span>
           </div>
         </div>
         <div class="col">
           <div class="form-group">
-            <input v-model="bookingForm.checkOut" class="form-control" type="date" id="EndTime" name="EndTime" required>
+            <input v-model="bookingForm.checkOut" class="form-control" type="date" id="endTime" name="endTime" required>
             <span class="form-label">Check out</span>
           </div>
         </div>
         <div class="col">
           <div class="form-btn">
-            <button class="submit-btn-btn" v-on:click="bookAllAvailableRooms()">
+            <button class="submit-btn-btn" data-bs-toggle="modal" data-bs-target="#bookAllModal"v-on:click="openBookAllModal">
               Book ALL Rooms
             </button>
           </div>
         </div>
       </div>
     </form>
+   
 
     <div class="container">
       <div class="row" v-for="room in rooms" :key="room.Id">
@@ -71,10 +68,10 @@
                   <div class="h1" v-text="room.Name"></div>
                   <div class="pb-3 pt-4" v-text="`${room.Size} ruutmeetrit`"></div>
                   <div v-text="room.Description"></div>
-                  <button type="button" class="btn btn btn-dark p-3 mt-5 mx-2" data-bs-toggle="modal" data-bs-target="#roomInfoModal" v-on:click="getRoom(room.Id)">
+                  <button type="button" class="btn btn btn-dark p-2 mt-5 mx-5" data-bs-toggle="modal" data-bs-target="#roomInfoModal" v-on:click="getRoom(room.Id)">
                     Explore Room
                   </button>
-                <button type="button frm-btn" class="btn btn btn-outline-secondary p-3 mt-5 mx-2" v-on:click="openBookingModal(room.Id)">
+                <button type="button frm-btn" class="btn btn btn-outline-secondary p-2 mt-5 mx-5" v-on:click="openBookingModal(room.Id)">
                     Book This Room
                 </button>
                 </div>
@@ -98,20 +95,21 @@
               </div>
             
               <div v-else>
-                <!-- <div v-for="room in availableRooms" :key="room.Id"> -->
-                  <li v-for="room in availableRooms" :key="room.Id">
-                    {{ room.Name }}
-                    {{ room.Size }}
-                    {{ room.Description }}
-                    {{ room.Price }}
-                    </li>
+                <div v-for="room in availableRooms" :key="room.Id">
+                    <!-- Display room information here -->
+                    <img class="img-fluid images" :src="room.Images"></img>
+                    <div>{{ room.Name }}</div>
+                    <div>{{ room.Size }}</div>
+                    <div>{{ room.Description }}</div>
+                    <div>{{ room.Price }}</div>
+                    <hr class="my-3">
+                </div>
               </div>
+              <button class="btn btn-primary" @click="bookAllAvailableRooms">Book All Rooms</button>
             </div>
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" @click="confirmBookAllRooms">Book All Rooms</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              
             </div>
           </div>
         </div>
@@ -141,12 +139,12 @@
 
       <!-- bookingModal -->
       <div id="bookingModal" class="modal" tabindex="-1">
-        <div class="modal-dialog modal-fullscreen-xxl-down modal-xl">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-5">
+            <div class="modal-body">
                 <div id="booking" class="section my-3">
                     <div class="section-center">
                       <div class="container">
@@ -217,7 +215,7 @@
 
                     </div>
                   </div>
-            <div class="modal-footer mt-5">
+            <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>

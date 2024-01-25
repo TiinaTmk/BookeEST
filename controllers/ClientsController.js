@@ -32,6 +32,7 @@ exports.createNew = async(req, res) => {
     console.log(client)
 }
 
+
 exports.deleteById = async (req, res) => {
     let result
     try {

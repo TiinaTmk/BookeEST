@@ -103,10 +103,31 @@ exports.getAll = async(req,res) => {
     res.send(bookings)
 }
 
-exports.getById = async(req, res) => {
-    const bookings = await Booking.findByPk(req.params.id)
-    res.send(bookings)
-}
+// exports.getById = async(req, res) => {
+//     const bookings = await Booking.findByPk(req.params.id)
+//     res.send(bookings)
+// }
+
+exports.getById = async (req, res) => {
+    try {
+        const bookingId = req.params.id;
+        // Find the booking by ID
+        const booking = await Booking.findByPk(bookingId, {
+            attributes: ["Id", "RoomID", "ClientID", "StartTime", "EndTime", "Status", "DateCancelled"],
+        });
+
+        if (!booking) {
+            res.status(404).send({ error: "Booking not found" });
+            return;
+        }
+
+        res.status(200).json(booking);
+    } catch (error) {
+        console.error("Error searching for booking by ID:", error);
+        res.status(500).send({ error: "Internal server error" });
+    }
+};
+
 
 exports.deleteById = async (req, res) => {
 
@@ -128,26 +149,46 @@ exports.deleteById = async (req, res) => {
     .status(204)
     }
 
-    exports.updateById = async (req, res) => {
-        let result
-        delete req.body.id
-        try {
-            result = await Booking.update(req.body,{where: {id: req.params.id}})
-        } catch (error) {
-            console.log("Booking update: ", error)
-            res.status(500).send({error:"something has gone wrong"})
-            return
-        } 
-        if( result.status === 0){
-            res.status(404).send({error:"Booking not found"})
-            return
-        }
-        const booking = await Booking.findByPk(req.params.id)
-        res.status(200)
-        .location(`${getBaseUrl(req)}/bookings/${booking.id}`)
-        .json(booking)
-    }
+    // exports.updateById = async (req, res) => {
+    //     let result
+    //     delete req.body.id
+    //     try {
+    //         result = await Booking.update(req.body,{where: {id: req.params.id}})
+    //     } catch (error) {
+    //         console.log("Booking update: ", error)
+    //         res.status(500).send({error:"something has gone wrong"})
+    //         return
+    //     } 
+    //     if( result.status === 0){
+    //         res.status(404).send({error:"Booking not found"})
+    //         return
+    //     }
+    //     const booking = await Booking.findByPk(req.params.id)
+    //     res.status(200)
+    //     .location(`${getBaseUrl(req)}/bookings/${booking.id}`)
+    //     .json(booking)
+    // }
    
+    exports.updateById = async (req, res) => {
+        try {
+            const bookingId = req.params.id;
+            // Find the booking by ID
+            const booking = await Booking.findByPk(bookingId);
+    
+            if (!booking) {
+                res.status(404).send({ error: "Booking not found" });
+                return;
+            }
+    
+            // Update the booking details
+            const updatedBooking = await booking.update(req.body, { fields: ["RoomID", "ClientID", "StartTime", "EndTime", "Status", "DateCancelled"] });
+    
+            res.status(200).json(updatedBooking);
+        } catch (error) {
+            console.error("Error updating booking:", error);
+            res.status(500).send({ error: "Internal server error" });
+        }
+    };
     // exports.cancelAllBookings = async (req, res) => {
     //     try {
     //       const currentDate = new Date();

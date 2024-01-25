@@ -101,12 +101,22 @@ paths:
                                     value:
                                         error: room not found wit given id
                     description: Room not found with given Id
-            operationId: id
             summary: Get full details of a room
             description: Returns full detauils about a specific room as determined by id input put the user
         delete:
             tags:
                 - delete-room
+            parameters:
+                -
+                    examples:
+                        integer of requested id:
+                            value: '63'
+                    name: id
+                    description: Id of the room that we require
+                    schema:
+                        type: integer
+                    in: path
+                    required: true
             responses:
                 '204':
                     content:
@@ -137,6 +147,299 @@ paths:
                         value: '63'
                 name: id
                 description: Id of the room that we require
+                schema:
+                    type: integer
+                in: path
+                required: true
+    /clients:
+        get:
+            tags:
+                - clients
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                            examples:
+                                1 example(s) defined:
+                                    value:
+                                        - Triine
+                                        - Pille
+                                        - Tiit
+                    description: returns list of clients
+                '404':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                client not found:
+                                    value:
+                                        error: client not found with given id
+                    description: Client not found with given Id
+            summary: get a list of clients from api
+            description: returns a list of all clients in the API
+        post:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/new-client'
+                        examples:
+                            example of a client:
+                                value: |-
+                                    [
+                                        "id": 1,
+                                        "Name": "Triin",
+                                        "Telephone": "5612565656",
+                                        "Email": "tititi@hihihi",
+                                        "Address": "Kohila 27"
+                                    ]
+                required: true
+            tags:
+                - new-client
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/new-client'
+                    description: Clients has been created into the array/database
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                One or all details are missing:
+                                    value:
+                                        error: One or all details are missing
+                    description: Not found
+            description: one of more not found
+    '/clients/{id}':
+        get:
+            tags:
+                - details
+            parameters:
+                -
+                    examples:
+                        integer of requested if:
+                            value: '30'
+                    name: id
+                    description: Id of the client that we require
+                    schema:
+                        type: integer
+                    in: path
+                    required: true
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                            examples:
+                                Details of a client:
+                                    value: |-
+                                        [
+                                            "id": 1,
+                                            "Name": "Triin",
+                                            "Telephone": "5612565656",
+                                            "Email": "tititi@hihihi",
+                                            "Address": "Kohila 27"
+                                        ]
+                    description: Returns full details of a given client as determined by the id
+                '404':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                client not found:
+                                    value:
+                                        error: client not found wit given id
+                    description: Client not found with given id
+            summary: Get full details of a client
+            description: Returns details of the clients as determined by the id input put the user
+        delete:
+            tags:
+                - delete-client
+            parameters:
+                -
+                    examples:
+                        delete:
+                            value:
+                                id: 5
+                    name: id
+                    description: Id of the client thay we required
+                    schema:
+                        type: integer
+                    in: path
+                    required: true
+            responses:
+                '204':
+                    description: 'Deleted successfully, nothing to display'
+            summary: Delete clients with given id
+            description: Delete clients with given id
+    /bookings:
+        get:
+            tags:
+                - bookings
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                            examples:
+                                list of bookings:
+                                    value: |-
+                                        [
+                                        "Id": 27,
+                                        "RoomID": 1,
+                                        "ClientID": 34,
+                                        "StartTime": "2024-01-19",
+                                        "EndTime": "2024-01-20",
+                                        "Status": "booked",
+                                        "DateCancelled": null
+                                        ]
+                    description: returns a list of bookings
+            summary: get a list of bookigs from api
+            description: returns a list of bookings from api
+        post:
+            requestBody:
+                description: a new bookinhg to be created
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/new-booking'
+                        examples:
+                            example of a booking:
+                                value:
+                                    Id: 27
+                                    RoomID: 1
+                                    ClientID: 34
+                                    StartTime: '2024-01-19'
+                                    EndTime: '2024-01-20'
+                                    Status: booked
+                required: true
+            tags:
+                - new-booking
+            responses:
+                '201':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/new-booking'
+                    description: Bookings has been created into the array/database
+                '400':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                One or all details are missing":
+                                    value:
+                                        error: One or all details are missing
+                    description: not found
+    '/bookings/{id}':
+        get:
+            tags:
+                - details
+            parameters:
+                -
+                    examples:
+                        integer of a requested ud:
+                            value: '3'
+                    name: id
+                    description: id of the booking
+                    schema:
+                        type: integer
+                    in: path
+                    required: true
+            responses:
+                '200':
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+                            examples:
+                                Details of a booking:
+                                    value: |
+
+                                        "Id": 27,
+                                        "RoomID": 1,
+                                        "ClientID": 34,
+                                        "StartTime": "2024-01-19",
+                                        "EndTime": "2024-01-20",
+                                        "Status": "booked",
+                                        "DateCancelled": null
+                    description: 'Returns full details of a given booking, as determined by the id'
+                '404':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                booking not found:
+                                    value:
+                                        error: booking not founf with given id
+                    description: Booking not found with given Id
+            operationId: id
+            summary: Get full details of bookings
+            description: Returns full detauils about a specific booking as determined by id input put the user
+        delete:
+            tags:
+                - delete-room
+            parameters:
+                -
+                    examples:
+                        integer of a requested ud:
+                            value: '3'
+                    name: id
+                    description: Id of the booking we required
+                    schema:
+                        type: integer
+                    in: path
+                    required: true
+            responses:
+                '204':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/delete-room'
+                            examples:
+                                delete:
+                                    value:
+                                        id: 5
+                    description: 'Deleted succesfullt, nothing to display'
+                '404':
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/error'
+                            examples:
+                                error:
+                                    value:
+                                        error: 'can''t delete, id not not found'
+                    description: booking not found
+            summary: Delete booking with given id
+            description: Delete booking with given id
+        parameters:
+            -
+                examples:
+                    integer of a requested ud:
+                        value: '3'
+                name: id
+                description: '{"error":"One or all details are missing"}'
                 schema:
                     type: integer
                 in: path
@@ -183,3 +486,9 @@ components:
                     type: integer
             example:
                 id: 34
+        new-client:
+            description: ''
+            type: object
+        new-booking:
+            description: ''
+            type: object
